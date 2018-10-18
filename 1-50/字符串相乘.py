@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 字符串相乘.py
+"""
+给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。
+
+示例 1:
+输入: num1 = "2", num2 = "3"
+输出: "6"
+
+示例 2:
+输入: num1 = "123", num2 = "456"
+输出: "56088"
+
+说明：
+num1 和 num2 的长度小于110。
+num1 和 num2 只包含数字 0-9。
+num1 和 num2 均不以零开头，除非是数字 0 本身。
+不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。
+"""
+"""
+思路：可以使用以下，或者自己写一个 int() 函数 myint() 来实现，这样更快。
+"""
+__author__ = 'Aiyane'
+
+
+class Solution:
+    def multiply(self, num1, num2):
+        """
+        :type num1: str
+        :type num2: str
+        :rtype: str
+        """
+        res = []
+        i = -1
+        for ch1 in num2[::-1]:
+            j = i
+            i += 1
+            for ch2 in num1[::-1]:
+                j += 1
+                oth, num = divmod(int(ch2) * int(ch1), 10)
+                k = len(res) - j
+                if k <= 0:
+                    res.append(num)
+                    res.append(oth)
+                else:
+                    res[j] += num
+                    oth1, res[j] = divmod(res[j], 10)
+                    oth += oth1
+                    z = 0
+                    while k-1 > 0 and oth > 0:
+                        oth, res[j+z+1] = divmod(res[j+z+1]+oth, 10)
+                        k -= 1
+                        z += 1
+                    if oth > 0:
+                        res.append(oth)
+
+        res = ''.join([str(x) for x in res[::-1]]).lstrip('0')
+        return res if res else '0'
