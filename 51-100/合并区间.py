@@ -32,15 +32,17 @@ class Solution:
         :type intervals: List[Interval]
         :rtype: List[Interval]
         """
-        if len(intervals) == 1:
+        l = len(intervals)
+        if l == 1:
             return intervals
         i = 1
         intervals.sort(key=lambda x:x.start)
-        while i < len(intervals):
+        while i < l:
             if intervals[i].start <= intervals[i-1].end:
                 if intervals[i].end > intervals[i-1].end:
                     intervals[i-1].end = intervals[i].end
                 intervals.pop(i)
+                l -= 1
             else:
                 i += 1
         return intervals
