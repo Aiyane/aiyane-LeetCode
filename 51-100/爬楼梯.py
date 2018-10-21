@@ -26,10 +26,6 @@
 """
 思路：动态规划，更好的方法如下，为正向的循环。
 def climbStairs(self, n):
-    """
-    :type n: int
-    :rtype: int
-    """
     res = list()
     res = [1]
     if n >= 2:
