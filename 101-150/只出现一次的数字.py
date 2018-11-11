@@ -26,4 +26,8 @@ class Solution:
         :type nums: List[int]
         :rtype: int
         """
+        # res = 0
+        # for i in nums:
+        #     res^=i
+        # return res
         return sum(set(nums)) * 2  - sum(nums)
