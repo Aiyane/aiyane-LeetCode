@@ -18,3 +18,8 @@ Id 是这个表的主键。
 | 2  | bob@example.com  |
 +----+------------------+
 */
+/*
+思路：同一张表查找、选出值相同Id大于其他的删除。
+*/
+delete p1 from Person as p1, Person as p2
+where p1.Email = p2.Email and p1.Id > p2.Id;
