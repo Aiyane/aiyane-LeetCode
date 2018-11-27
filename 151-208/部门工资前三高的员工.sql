@@ -41,3 +41,17 @@ Department 表包含公司所有部门的信息。
 | Sales      | Sam      | 60000  |
 +------------+----------+--------+
 */
+/*
+思路：选前三时，可以使用计算大于当前员工工资的行数有多少？如果小于3，那么该数据在前三。最后再来排序，先排部门后排工资。
+*/
+select d.Name as Department, e.Name as Employee, e.Salary
+from Employee as e 
+join Department as d
+on d.Id = e.DepartmentId
+where (
+    select count(distinct Salary)
+    from Employee
+    where Employee.DepartmentId = e.DepartmentId
+    and Employee.Salary > e.Salary
+) < 3
+order by e.DepartmentId, e.Salary desc;
