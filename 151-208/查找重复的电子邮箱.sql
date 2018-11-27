@@ -24,3 +24,10 @@ SQL架构
 +---------+
 说明：所有电子邮箱都是小写字母。
 */
+/*
+思路：使用 group by，having查询
+*/
+select Email
+from Person
+group by Email 
+having count(Email) > 1;
