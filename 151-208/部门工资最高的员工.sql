@@ -36,3 +36,14 @@ Department 表包含公司所有部门的信息。
 | Sales      | Henry    | 80000  |
 +------------+----------+--------+
 */
+/*
+思路：同样使用子查询，在 join on 语句中直接使用 and 可以在部门 id 相同的的条件下继续查询。
+*/
+select d.Name as Department, e.Name as Employee, e.Salary
+from Employee as e join Department as d
+on e.DepartmentId = d.Id 
+and e.Salary >= (
+    select max(Salary) 
+    from Employee 
+    where DepartmentId = d.Id
+);
