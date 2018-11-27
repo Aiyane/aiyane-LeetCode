@@ -18,3 +18,13 @@
 |  4 |
 +----+
 */
+/*
+思路：知道 DATEDIFF 的用法。
+*/
+select
+    w1.Id
+from 
+    Weather as w1, Weather as w2
+where
+    DATEDIFF(w1.RecordDate, w2.RecordDate) = 1
+    and w1.Temperature > w2.Temperature;
