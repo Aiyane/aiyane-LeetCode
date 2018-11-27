@@ -37,3 +37,13 @@ Orders 表：
 | Max       |
 +-----------+
 */
+/*
+思路：使用子查询，使用 join on 能够得到订阅用户 id，再使用 not in 语句选出未订阅用户名单。
+*/
+select Name as Customers
+from Customers where Id not in 
+(
+    select Customers.Id
+    from Customers join Orders 
+    on Customers.Id = Orders.CustomerId
+);
