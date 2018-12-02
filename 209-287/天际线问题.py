@@ -24,6 +24,10 @@ Buildings  Skyline Contour
 输出天际线中不得有连续的相同高度的水平线。例如 [...[2 3], [4 5], [7 5], [11 5], [12 7]...] 是不正确的答案；
 三条高度为 5 的线应该在最终输出中合并为一个：[...[2 3], [4 5], [12 7], ...]
 """
+"""
+思路：使用大根堆来解决，大厦的左节点与右节点进行全部排序，如果是左节点，就放入堆中，如果是右节点，就将堆中的该节点对应的左节点删除。
+一直要保持堆的结构，然后从堆中取出当前最大的高度，如果最大的高度与上一次的最大高度一样，那么忽略。如果不一样了，就把该节点添加到结果。
+"""
 __author__ = 'Aiyane'
 
 
@@ -33,4 +37,51 @@ class Solution:
         :type buildings: List[List[int]]
         :rtype: List[List[int]]
         """
-        pass
+        from collections import defaultdict
+        from heapq import heappush, heappop
+
+        if not buildings:
+            return buildings
+
+        points = []
+        for l, r, h in buildings:
+            points.append((l, -h))
+            points.append((r, h))
+
+        points.sort()
+
+        result = []
+        heights = [0]
+        prev = heights[0]
+
+        ignored = defaultdict(int)
+
+        for x, h in points:
+            if h < 0:
+                heappush(heights, h)
+            else:
+                ignored[-h] += 1
+
+            # 由于heappop只能一次移除最小的元素，所以先保存应当移除的元素，等到该元素成为最小元素时，就把该元素移除。
+            # 或者使用
+            # # 找到 h 的序号 i
+            # i = heap.index(-h)
+            # heights[i] = heights[-1]
+            # # 把第 h 删除，但是最后一个元素现在在 i 号位置
+            # heights.pop()
+            # # 这里如果 i 就是最后一个元素则不需要重新排序
+            # if i < len(heap):
+            #     # 第 i 号元素考察父节点们，进行交换
+            #     heapq._siftup(heights, i)
+            #     # 考察第 i 号元素子节点们，进行交换
+            #     heapq._siftdown(heights, 0, i)
+            while ignored[heights[0]] > 0:
+                ignored[heights[0]] -= 1
+                heappop(heights)
+
+            cur = heights[0]
+            if cur != prev:
+                result.append((x, -cur))
+                prev = cur
+
+        return result
