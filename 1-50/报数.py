@@ -42,19 +42,18 @@ class Solution:
         if n == 2:
             return '11'
         res = '11'
-        ws = []
-        for __ in range(n-2):
-            tem = [res[0]]
-            for ch in res[1:]:
-                if ch in tem:
-                    tem.append(ch)
-                else:
-                    ws.append(str(len(tem)))
-                    ws.append(tem.pop())
-                    tem.clear()
-                    tem.append(ch)
-            ws.append(str(len(tem)))
-            ws.append(tem.pop())
-            res = ''.join(ws)
-            ws.clear()
+        j = 0
+        while j < n-2:
+            i = 0
+            tmp = ''
+            while i < len(res):
+                p = res[i]
+                num = 1
+                while i + 1 < len(res) and res[i+1] == p:
+                    num += 1
+                    i += 1
+                i += 1
+                tmp += str(num) + p
+            res = tmp
+            j += 1
         return res

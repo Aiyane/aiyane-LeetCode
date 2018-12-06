@@ -14,42 +14,40 @@
 1,1,5 → 1,5,1
 """
 """
-思路：从后往前取出数字，然后从这个数字的后一个数字开始，从前往后比较，找出大于取出数字的最小数字。将两个数字交换。
-然后把第一个数字的后一个位置开始全部倒序。
+思路：首先写出数组倒序算法，然后从后向前遍历，找出第一对正序的两个数字，例如：8，3，7，6，5，4，2，1。中第一对为 3，7。
+然后从 7 开始向后遍历，遇到小于 3 时，例如 2。取前一个与 3 交换 3<->2。然后将 2 之后数组全部倒序。
+如果没有正序数字，那么整个数组倒序。
 """
 __author__ = 'Aiyane'
 import profile
 
 class Solution:
+    def reverse(self, nums, start, end):
+        while start < end:
+            nums[start], nums[end] = nums[end], nums[start]
+            start += 1
+            end -= 1
+
     def nextPermutation(self, nums):
         """
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
         l = len(nums)
-        i = l-1
-        
-        while i >= 0:
-            j = i + 1
-            index = None
-            while j < l and nums[i] < nums[j]:
-                if index is None or nums[j] <= nums[index]:
-                    index = j
-                j += 1
-            if index:
-                nums[i], nums[index] = nums[index], nums[i]
-                nums[i+1:] = nums[i+1:][::-1]
-                return None
-            i -= 1
-        nums.reverse()
+        pos = l - 2
+        while pos >= 0:
+            if nums[pos] < nums[pos+1]:
+                break
+            pos -= 1
 
-def main():
-    sol = Solution()
-    print(sol.nextPermutation([9,8,3,10,9,8,7,2,1]))
-    print(sol.nextPermutation([9,8,3,6,5,4,7,6,5,2,1]))
-    print(sol.nextPermutation([2,3,1,3,3]))
-    print(sol.nextPermutation([1,1,5]))
-
-if __name__ == '__main__':
-    # profile.run('main()')
-    main()
+        if pos < 0:
+            self.reverse(nums, 0, l - 1)
+        else:
+            p = pos + 1
+            while p < l:
+                if nums[p] <= nums[pos]:
+                    break
+                p += 1
+            p -= 1
+            nums[pos], nums[p] = nums[p], nums[pos]
+            self.reverse(nums, pos+1, l-1)

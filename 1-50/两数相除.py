@@ -30,10 +30,17 @@ class Solution:
         :type divisor: int
         :rtype: int
         """
-        i = abs(dividend)//abs(divisor)
+        i = 1
+        res = 0
         if dividend > 0 and divisor < 0 or dividend < 0 and divisor > 0:
             i *= -1
-        max_limit = 2**31 - 1
-        if i < -2**31 or i > max_limit:
-            return max_limit
-        return i
+        m, n = abs(dividend), abs(divisor)
+        while m >= n:
+            t = n
+            p = 1
+            while m > (t<<1):
+                t <<= 1
+                p <<= 1
+            res += p
+            m -= t
+        return max(min(i*res, 0x7fffffff), -2147483648)

@@ -23,40 +23,22 @@ __author__ = 'Aiyane'
 
 
 class Solution:
-    def start(self, cur, oths):
-        if len(oths) == 1:
-            cur.append(oths.pop())
-            del oths
-            return [cur]
-
-        res = []
-        for oth in oths:
-            new_c = cur.copy()
-            new_c.append(oth)
-            new_o = oths.copy()
-            new_o.remove(oth)
-            res.extend(self.start(new_c, new_o))
-        return res
-
     def permute(self, nums):
         """
         :type nums: List[int]
         :rtype: List[List[int]]
         """
+        def dfs(nums, res, visited, path):
+            if len(path) == len(nums):
+                res.append(path.copy())
+            else:
+                for num in nums:
+                    if num not in visited:
+                        visited.add(num)
+                        path.append(num)
+                        dfs(nums, res, visited, path)
+                        path.pop()
+                        visited.remove(num)
         res = []
-        l = len(nums)
-        if l == 1:
-            return [nums]
-        i = 0
-        while i < l:
-            new = nums.copy()
-            res.extend(self.start([new.pop(i)], new))
-            i += 1
+        dfs(nums, res, set(), [])
         return res
-
-def main():
-    sol = Solution()
-    print(sol.permute([1,2,3]))
-
-if __name__ == '__main__':
-    main()

@@ -61,4 +61,3 @@ class Solution:
                     prv += 1
                 n += 1
         return prv
-            

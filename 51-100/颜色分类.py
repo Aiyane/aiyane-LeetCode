@@ -18,6 +18,10 @@
 首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
 你能想出一个仅使用常数空间的一趟扫描算法吗？
 """
+"""
+思路：x,y,z指针分别指向0位置起点，1位置起点，2位置起点。那么当当前数字为1时，这时三个指针都需要后移一位，并且将对应位置赋值对应数字。
+必须是倒序赋值，但是又要注意当前位置数字不变，也要注意还未开始移动的指针不赋值。
+"""
 __author__ = 'Aiyane'
 
 
@@ -27,4 +31,26 @@ class Solution:
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
-        nums.sort()
+        x = y = z = -1
+        for i in range(len(nums)):
+            if nums[i] == 0:
+                x += 1
+                y += 1
+                z += 1
+                nums[z] = 2
+                nums[y] = 1
+                nums[x] = 0
+            elif nums[i] == 1:
+                y += 1
+                z += 1
+                nums[z] = 2
+                if x != -1:
+                    nums[x] = 0
+                nums[y] = 1
+            elif nums[i] == 2:
+                z += 1
+                if y != -1:
+                    nums[y] = 1
+                if x != -1:
+                    nums[x] = 0
+                nums[z] = 2

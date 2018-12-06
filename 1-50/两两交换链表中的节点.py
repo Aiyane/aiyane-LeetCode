@@ -28,34 +28,22 @@ class Solution:
         :type head: ListNode
         :rtype: ListNode
         """
-        if not head:
-            return None
+        if not head or not head.next:
+            return head
+        
+        start = head
+        h = start.next
+        pre = ListNode(0)
 
-        p1 = head
-        p0 = None
-
-        while p1.next and p1.next.next:
-            p2 = p1.next
-            p3 = p2.next
-
-            p2.next = p1
-            p1.next = p3
-
-            if p0:
-                p0.next = p2
-            else:
-                head = p2
-
-            p0 = p1
-            p1 = p3
-
-        if p1.next:
-            p2 = p1.next
-            p1.next = None
-            p2.next = p1
-            if p0:
-                p0.next = p2
-            else:
-                head = p2
-
-        return head
+        while start:
+            end = start.next
+            pre.next = end
+            if not end:
+                pre.next = start
+                return h
+            nextStart = end.next
+            end.next = start
+            start.next = nextStart
+            pre = start
+            start = nextStart
+        return h

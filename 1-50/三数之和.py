@@ -43,7 +43,7 @@ class Solution:
             target = 0 - nums[i]
             j = i + 1
             k = n_len - 1
-            while j < k:
+            while 1:
                 now = nums[j] + nums[k]
                 if now == target:
                     res.append([nums[i], nums[j], nums[k]])

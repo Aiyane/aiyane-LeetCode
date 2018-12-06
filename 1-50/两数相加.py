@@ -32,26 +32,34 @@ class Solution:
         :type l2: ListNode
         :rtype: ListNode
         """
-        ne = 0
+        # 保留头节点
         l = l1
-        while True:
-            l1.val += ne
-            ne, l1.val = divmod(l1.val + l2.val, 10)
-            if l1.next is None or l2.next is None:
-                break
-            l1 = l1.next
-            l2 = l2.next
+
+        # 不存在 l2
+        if not l2:
+            return l
+
+        # 不存在 l1
+        if not l1:
+            return l2
+
+        # 简单相加
+        ne, l1.val = divmod(l1.val + l2.val, 10)
+        while l1.next and l2.next:
+            l1, l2 = l1.next, l2.next
+            ne, l1.val = divmod(l1.val + l2.val + ne, 10)
+
+        # 连接
         if l2.next:
             l1.next = l2.next
-        if l1.next and ne:
+
+        # 还有进位
+        while l1.next and ne > 0:
             l1 = l1.next
-            while l1:
-                l1.val += ne
-                ne, l1.val = divmod(l1.val, 10)
-                if not l1.next:
-                    break
-                l1 = l1.next
+            ne, l1.val = divmod(l1.val + ne, 10)
+
+        # 末尾进位
         if ne:
             l1.next = ListNode(ne)
-        return l
 
+        return l

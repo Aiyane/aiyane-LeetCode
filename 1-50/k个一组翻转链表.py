@@ -17,7 +17,7 @@ k 是一个正整数，它的值小于或等于链表的长度。如果节点总
 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
 """
 """
-思路: k个变量放在一个数组中, 每次装满数组就将它们倒着连起来, 装不满就连第一个, 最后返回
+思路: 链表倒序算法。
 """
 
 
@@ -34,21 +34,48 @@ class Solution:
         :type k: int
         :rtype: ListNode
         """
+        # p = head
+        # ps = [None]*k
+        # p0 = ListNode(0)
+        # head = p0
+        # i = 0
+        # while p:
+        #     ps[i] = p
+        #     p = p.next
+        #     i += 1
+        #     if i == k:
+        #         i = 0
+        #         for pi in ps[::-1]:
+        #             p0.next = pi
+        #             p0 = pi
+        #         ps = [None]*k
+        #         p0.next = None
+        # p0.next = ps[0]
+        # return head.next
+        def reverse(node):
+            if not node or not node.next:
+                return node
+            node1 = reverse(node.next)
+            node1.next = node
+            return node
+        copyK = k
+        start = h = pre = ListNode(0)
         p = head
-        ps = [None]*k
-        p0 = ListNode(0)
-        head = p0
-        i = 0
+        pre.next = p
         while p:
-            ps[i] = p
-            p = p.next
-            i += 1
-            if i == k:
-                i = 0
-                for pi in ps[::-1]:
-                    p0.next = pi
-                    p0 = pi
-                ps = [None]*k
-                p0.next = None
-        p0.next = ps[0]
-        return head.next
+            while k > 0:
+                pre = p
+                if not p:
+                    return start.next
+                p = p.next
+                k -= 1
+            pre.next = None
+            node = reverse(h.next)
+            node.next = p
+
+            # 下一段
+            h.next = pre
+            h = pre = node
+            k = copyK
+        return start.next
+

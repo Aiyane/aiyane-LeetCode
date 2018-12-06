@@ -31,12 +31,14 @@ class Solution:
         :type nums: List[int]
         :rtype: int
         """
-        nums.sort()
-        ret = 1
-        for num in nums:
-            if num > 0:
-                if ret == num:
-                    ret = num + 1
-                elif ret < num:
-                    return ret
-        return ret
+        l = len(nums)
+        i = 0
+        while i < l:
+            if 0 <= nums[i]-1 < l and nums[nums[i]-1] != nums[i]:
+                nums[nums[i]-1], nums[i] = nums[i], nums[nums[i] - 1]
+            else:
+                i += 1
+        for i in range(l):
+            if nums[i] != i+1:
+                return i+1
+        return l + 1

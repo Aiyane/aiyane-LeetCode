@@ -29,12 +29,11 @@ class Solution:
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        res = dict()
-        for s in strs:
-            lst = ''.join(sorted(s))
-            if lst not in res:
-                res[lst] = [s]
-            else:
-                res[lst].append(s)
-        return [v for v in res.values()]
-        
+        table = dict()
+        for word in strs:
+            count = [0]*26
+            for ch in word:
+                count[ord(ch) - ord('a')] += 1
+            key = hash(count)
+            table.setdefault(key, []).append(word)
+        return [val for val in table.values()]

@@ -32,71 +32,16 @@ class Solution:
             return l2
         elif not l2:
             return l1
-
-        # 初始化变量
-        pi = l1
-        pj = l2
-        p = ptr = None
-
-        while True:
-            if pi.val >= pj.val:
-                # 如果有ptr, 表示结果链表已经存在
-                # 那么移动是需要先将ptr的next指向pj
-                # 因为现在pj的值是比pi的值小
-                # 那么ptr首先应该链接pj
-                # 如果ptr不存在, 表示现在是第一次比较
-                # 这是ptr逻辑上其实就是l2的开始, 即pj节点
-                # 因为pj的移动ptr也会改变, 所以只需要在最后做赋值即可
-                if ptr:
-                    ptr.next = pj
-
-                # 由于只有next指针, 所以需要一个tem指针保存
-                # 刚好小于或等于pi节点值的节点指针, pj则指向刚好大于pi的节点
-                while pi.val >= pj.val:
-                    tem = pj
-                    pj = pj.next
-
-                    # 如果循环完全部l2链表, 那么就可以判断最后一个节点为tem
-                    # 让tem指向pi这个大于它的节点就可以直接返回头指针p或者l2
-                    if pj is None:
-                        tem.next = pi
-                        return p if p else l2
-
-                # 刚好小于pi的节点的next指向pi
-                # 现在结果链表ptr移到pi处, pi应该指向它的下一个节点
-                tem.next = pi
-                ptr = pi
-                pi = pi.next
-
-                # 这里如果l1(pi)已经遍历完, 那么ptr的下一个节点就是pj
-                # 直接连接pj返回结果的头指针
-                if pi is None:
-                    ptr.next = pj
-                    return p if p else l2
-
-                # 如果是第一次比较, 头指针p就应该为l2
-                if p is None:
-                    p = l2
-
+        
+        pi, pj = l1, l2
+        h = p = ListNode(-1)
+        while pi and pj:
+            if pi.val <= pj.val:
+                p.next, p, pi = pi, pi, pi.next
             else:
-                if ptr:
-                    ptr.next = pi
-
-                while pi.val <= pj.val:
-                    tem = pi
-                    pi = pi.next
-
-                    if pi is None:
-                        tem.next = pj
-                        return p if p else l1
-
-                tem.next = pj
-                ptr = pj
-                pj = pj.next
-
-                if pj is None:
-                    ptr.next = pi
-                    return p if p else l1
-
-                if p is None:
-                    p = l1
+                p.next, p, pj = pj, pj, pj.next
+        if pi:
+            p.next = pi
+        elif pj:
+            p.next = pj
+        return h.next

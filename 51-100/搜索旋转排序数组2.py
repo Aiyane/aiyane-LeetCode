@@ -21,7 +21,7 @@
 这会影响到程序的时间复杂度吗？会有怎样的影响，为什么？
 """
 """
-思路：这种题没有多大意义
+思路：二分法，利用旋转数组性质。
 """
 __author__ = 'Aiyane'
 
@@ -33,4 +33,37 @@ class Solution:
         :type target: int
         :rtype: bool
         """
-        return target in set(nums.sort())
+        if not nums:
+            return False
+
+        l = len(nums)
+        if l == 1:
+            return target == nums[0]
+
+        mid = l//2
+        if nums[mid] == target:
+            return True
+
+        if nums[mid] < target:
+            if nums[mid] == nums[-1]:
+                i = mid + 1
+                while i < l and nums[i] == nums[-1]:
+                    i += 1
+                if i == l:
+                    return self.search(nums[:mid], target)
+                return self.search(nums[mid+1:], target)
+            if nums[mid] > nums[-1] or nums[-1] >= target:
+                return self.search(nums[mid+1:], target)
+            return self.search(nums[:mid], target)
+
+        if nums[mid] == nums[0]:
+            i = mid - 1
+            while i >= 0 and nums[i] == nums[0]:
+                i -= 1
+            if i + 1 == 0:
+                return self.search(nums[mid+1:], target)
+            return self.search(nums[:mid], target)
+
+        if nums[mid] < nums[0] or nums[0] <= target:
+            return self.search(nums[:mid], target)
+        return self.search(nums[mid+1:], target)

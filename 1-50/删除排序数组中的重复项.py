@@ -41,5 +41,13 @@ class Solution:
         :type nums: List[int]
         :rtype: int
         """
-        nums[:] = sorted(set(nums))
-        return len(nums)
+        l = len(nums)
+        if l < 2:
+            return l
+
+        slow = 0
+        for i in range(1, l):
+            if nums[slow] != nums[i]:
+                slow += 1
+                nums[slow] = nums[i]
+        return slow + 1

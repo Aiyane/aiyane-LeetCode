@@ -29,37 +29,21 @@ class Solution:
         :type target: int
         :rtype: List[int]
         """
-        i = 0
-        j = len(nums)-1
-        while i <= j and nums[i] != nums[j]:
-            m = (i + j) // 2
-            if target > nums[m]:
-                i = m + 1
-            elif target < nums[m]:
-                j = m - 1
+        if target not in nums:
+            return [-1, -1]
+        l = len(nums)
+        i, j = 0, l - 1
+        mid = l // 2
+        while True:
+            if target > nums[mid]:
+                i = mid + 1
+            elif target < nums[mid]:
+                j = mid - 1
             else:
-                i_m = j_m = m
-
-                while i < i_m and nums[(i + i_m) // 2] == target:
-                    i_m = (i + i_m) // 2
-
-                while j > j_m and nums[(j + j_m + 1) // 2] == target:
-                    j_m = (j + j_m + 1) // 2
-
-                i = (i + i_m + 1) // 2
-
-                if nums[j] != target:
-                    j = (j + j_m) // 2
-        if j >= 0 and nums[i] == nums[j] == target:
-            return i, j
-        return -1, -1
-
-        
-def main():
-    sol = Solution()
-    print(sol.searchRange([5,7,7,8,8,10], 8))
-    print(sol.searchRange([5,7,7,8,8,10], 6))
-    print(sol.searchRange([1,2,2], 2))
-
-if __name__ == '__main__':
-    main()
+                i = j = mid
+                while j + 1 < l and nums[j + 1] == target:
+                    j += 1
+                while 0 <= i - 1 and nums[i - 1] == target:
+                    i -= 1
+                return [i, j]
+            mid = (i + j) // 2

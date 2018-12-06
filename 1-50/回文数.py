@@ -35,9 +35,9 @@ class Solution:
             return False
         res = 0
         num = x
-        while num >= 10:
+        while num > 0:
             num, s = divmod(num, 10)
             res = res*10 + s
-        return x == res*10+num
+        return x == res
 
 

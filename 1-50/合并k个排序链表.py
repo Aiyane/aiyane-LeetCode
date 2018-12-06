@@ -14,7 +14,7 @@
 输出: 1->1->2->3->4->4->5->6
 """
 """
-思路: 将全部指针放入list中, 然后直接使用sort排序, 再重新链接起来
+思路: 将全部指针放入list中, 然后直接使用sort排序, 再重新链接起来。或者使用堆
 """
 
 
@@ -24,25 +24,65 @@ class ListNode:
         self.next = None
 
 
+def heappush(heap, item):
+    heap.append(item)
+    _siftdown(heap, 0, len(heap)-1)
+
+
+def _siftup(heap, pos):
+    endpos = len(heap)
+    startpos = pos
+    newitem = heap[pos]
+    childpos = 2*pos + 1    # leftmost child position
+    while childpos < endpos:
+        rightpos = childpos + 1
+        if rightpos < endpos and not heap[childpos][0] < heap[rightpos][0]:
+            childpos = rightpos
+        heap[pos] = heap[childpos]
+        pos = childpos
+        childpos = 2*pos + 1
+    heap[pos] = newitem
+    _siftdown(heap, startpos, pos)
+
+
+def heappop(heap):
+    lastelt = heap.pop()
+    if heap:
+        returnitem = heap[0]
+        heap[0] = lastelt
+        _siftup(heap, 0)
+        return returnitem
+    return lastelt
+
+
+def _siftdown(heap, startpos, pos):
+    newitem = heap[pos]
+    while pos > startpos:
+        parentpos = (pos - 1) >> 1
+        parent = heap[parentpos]
+        if newitem[0] < parent[0]:
+            heap[pos] = parent
+            pos = parentpos
+            continue
+        break
+    heap[pos] = newitem
+
+
 class Solution:
     def mergeKLists(self, lists):
         """
         :type lists: List[ListNode]
         :rtype: ListNode
         """
-        nodelist = []
+        heap = []
         for head in lists:
-            current = head
-            while current:
-                nodelist.append(current)
-                current = current.next
-
-        nodelist.sort(key=lambda x: x.val)
-
-        for i in range(len(nodelist)-1):
-            nodelist[i].next = nodelist[i+1]
-        if not nodelist:
-            return None
-
-        else:
-            return nodelist[0]
+            if head:
+                heappush(heap, (head.val, head))
+        h = p = ListNode(-1)
+        while heap:
+            val, node = heappop(heap)
+            p.next = node
+            p = node
+            if node.next:
+                heappush(heap, (node.next.val, node.next))
+        return h.next

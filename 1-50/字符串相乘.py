@@ -31,29 +31,11 @@ class Solution:
         :type num2: str
         :rtype: str
         """
-        res = []
-        i = -1
-        for ch1 in num2[::-1]:
-            j = i
-            i += 1
-            for ch2 in num1[::-1]:
-                j += 1
-                oth, num = divmod(int(ch2) * int(ch1), 10)
-                k = len(res) - j
-                if k <= 0:
-                    res.append(num)
-                    res.append(oth)
-                else:
-                    res[j] += num
-                    oth1, res[j] = divmod(res[j], 10)
-                    oth += oth1
-                    z = 0
-                    while k-1 > 0 and oth > 0:
-                        oth, res[j+z+1] = divmod(res[j+z+1]+oth, 10)
-                        k -= 1
-                        z += 1
-                    if oth > 0:
-                        res.append(oth)
-
-        res = ''.join([str(x) for x in res[::-1]]).lstrip('0')
-        return res if res else '0'
+        ans = [0]*(len(num1) + len(num2))
+        for i, n1 in enumerate(num1[::-1]):
+            for j, n2 in enumerate(num2[::-1]):
+                ne, ans[i+j] = divmod(ans[i+j] + int(n1) * int(n2), 10)
+                ans[i+j+1] += ne
+        while len(ans) > 1 and ans[-1] == 0:
+            ans.pop()
+        return ''.join(map(str, ans[::-1]))
