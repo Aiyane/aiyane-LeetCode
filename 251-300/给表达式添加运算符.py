@@ -6,7 +6,7 @@
 
 示例 1:
 输入: num = "123", target = 6
-输出: ["1+2+3", "1*2*3"] 
+输出: ["1+2+3", "1*2*3"]
 
 示例 2:
 输入: num = "232", target = 8
@@ -24,41 +24,41 @@
 输入: num = "3456237490", target = 9191
 输出: []
 """
+"""
+prv_str: 前缀串
+op: 操作符
+prv_op: 操作符函数
+prv_num: 前缀后一个字符
+beh_str: 后缀字符串
+ol: 初始数字长度
+prv_str_add_num_l: 前缀加前缀后一个字符的总长度
+prv_num_l: 前缀后一个字符的长度
+prv_str_v: 前缀串的计算值
+prv_num_v: 前缀后一个字符的值
+"""
 
-from operator import add, sub
 
 class Solution:
     def addOperators(self, num: str, target: int):
-        res, num_dct = [], {}
-        op_dct = {'+': add, '-': sub}
+        ol, res = len(num), []
 
-        def cale(prv, num, num_v):
-            for i, ch in enumerate(reversed(prv)):
-                if ch in op_dct:
-                    a, b = prv[:-i-1], prv[-i:]
-                    v = num_dct[b+'*'+num] = num_dct[b] * num_v
-                    ret = num_dct[a+ch+b+'*'+num] = op_dct[ch](num_dct[a], v)
-                    return ret
-            ret = num_dct[prv+'*'+num] = num_dct[prv] * num_v
-            return ret
+        def dfs(prv_str, op, prv_op, prv_num, beh_str, prv_str_add_num_l, prv_num_l, prv_str_v, prv_num_v):
+            new_prv_str_v = prv_op(prv_str_v, prv_num_v)
+            new_prv_str = prv_str + op + prv_num
+            if prv_str_add_num_l < ol:
+                for i in range(1, ol - prv_str_add_num_l + 1):
+                    new_prv_num, new_beh_str = beh_str[:i], beh_str[i:]
+                    if i == 1 or new_prv_num[0] != '0': 
+                        new_prv_num_v = int(new_prv_num)
+                        dfs(new_prv_str, '+', lambda x, y: x + y, new_prv_num, new_beh_str, prv_str_add_num_l + i, i, new_prv_str_v, new_prv_num_v)
+                        dfs(new_prv_str, '-', lambda x, y: x - y, new_prv_num, new_beh_str, prv_str_add_num_l + i, i, new_prv_str_v, new_prv_num_v)
+                        dfs(prv_str, op, prv_op, prv_num + '*' + new_prv_num, new_beh_str, prv_str_add_num_l + i, prv_num_l + i, prv_str_v, prv_num_v * new_prv_num_v)
+            elif new_prv_str_v == target:
+                res.append(new_prv_str)
 
-        def dfs(prv, beh, ol, prv_l, prv_v):
-            num_dct[prv] = prv_v
-            if prv_l < ol:
-                for i in range(1, ol - prv_l + 1):
-                    num = beh[:i]
-                    if i == 1 or num[0] != '0':
-                        num_v = num_dct[num] = int(num)
-                        dfs(prv+'+'+num, beh[i:], ol, prv_l+i, prv_v + num_v)
-                        dfs(prv+'-'+num, beh[i:], ol, prv_l+i, prv_v - num_v)
-                        dfs(prv+'*'+num, beh[i:], ol, prv_l+i, cale(prv, num, num_v))
-            elif prv_v == target:
-                res.append(prv)
-
-        l = len(num)
-        for i in range(1, l+1):
+        for i in range(1, ol+1):
             prv, beh = num[:i], num[i:]
             if i == 1 or prv[0] != '0':
-                prv_v = num_dct[prv] = int(prv)
-                dfs(prv, beh, l, i, prv_v)
+                prv_v = int(prv)
+                dfs('', '', lambda x, y: y, prv, beh, i, i, 0, prv_v)
         return res
